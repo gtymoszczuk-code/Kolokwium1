@@ -39,6 +39,7 @@
             lblTotal = new Label();
             label1 = new Label();
             label2 = new Label();
+            btnDelete = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)presentBindingSource).BeginInit();
             SuspendLayout();
@@ -126,11 +127,21 @@
             label2.TabIndex = 7;
             label2.Text = "cena całości: ";
             // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(256, 356);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(75, 23);
+            btnDelete.TabIndex = 8;
+            btnDelete.Text = "usuń";
+            btnDelete.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(464, 450);
+            Controls.Add(btnDelete);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(lblTotal);
@@ -141,7 +152,7 @@
             Controls.Add(txtGift);
             Controls.Add(txtName);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Lista Prezentów";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)presentBindingSource).EndInit();
             ResumeLayout(false);
@@ -160,5 +171,6 @@
         private Label label1;
         private Label label2;
         private BindingSource presentBindingSource;
+        private Button btnDelete;
     }
 }

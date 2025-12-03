@@ -17,13 +17,20 @@ namespace Kolokwium1
         {
             InitializeComponent();
 
+            // ustawienia DataGridView
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.AutoGenerateColumns = true;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
 
             LoadData();
             dataGridView1.DataSource = presents;
 
             UpdateSummary();
+
+            // podpiêcie eventów
+            btnAdd.Click += btnAdd_Click;
+            btnDelete.Click += btnDelete_Click;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -52,6 +59,34 @@ namespace Kolokwium1
             txtPrice.Clear();
         }
 
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Zaznacz prezent do usuniêcia.");
+                return;
+            }
+
+            var selected = dataGridView1.SelectedRows[0].DataBoundItem as Present;
+
+            if (selected == null)
+                return;
+
+            var dialog = MessageBox.Show(
+                $"Czy na pewno chcesz usun¹æ prezent:\n\n" +
+                $"{selected.PersonName} - {selected.GiftName} ({selected.Price} z³)?",
+                "Potwierdzenie usuniêcia",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (dialog == DialogResult.Yes)
+            {
+                presents.Remove(selected);
+                SaveData();
+                UpdateSummary();
+            }
+        }
+
         private void SaveData()
         {
             var json = JsonSerializer.Serialize(presents, new JsonSerializerOptions
@@ -67,11 +102,13 @@ namespace Kolokwium1
             if (File.Exists(saveFile))
             {
                 string json = File.ReadAllText(saveFile);
-
                 var list = JsonSerializer.Deserialize<List<Present>>(json);
-
                 if (list != null)
                     presents = new BindingList<Present>(list);
+            }
+            else
+            {
+                presents = new BindingList<Present>();
             }
         }
 
