@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Text.Json;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -7,12 +10,20 @@ namespace Kolokwium1
 {
     public partial class Form1 : Form
     {
-        private List<Present> presents = new List<Present>();
+        private BindingList<Present> presents = new BindingList<Present>();
+        private string saveFile = "prezenty.json";
 
         public Form1()
         {
             InitializeComponent();
-            dataGridView1.DataSource = null;
+
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.AutoGenerateColumns = true;
+
+            LoadData();
+            dataGridView1.DataSource = presents;
+
+            UpdateSummary();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -21,7 +32,7 @@ namespace Kolokwium1
                 string.IsNullOrWhiteSpace(txtGift.Text) ||
                 string.IsNullOrWhiteSpace(txtPrice.Text))
             {
-                MessageBox.Show("Wype³nij wszystkie pola!");
+                MessageBox.Show("Wype³nij wszystkie pola.");
                 return;
             }
 
@@ -31,27 +42,44 @@ namespace Kolokwium1
                 return;
             }
 
-            // dodanie prezentu
-            Present p = new Present(txtName.Text, txtGift.Text, price);
-            presents.Add(p);
+            presents.Add(new Present(txtName.Text, txtGift.Text, price));
 
-            // odœwie¿enie tabeli
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = presents;
-
+            SaveData();
             UpdateSummary();
 
-            // czyœcimy pola
             txtName.Clear();
             txtGift.Clear();
             txtPrice.Clear();
         }
 
+        private void SaveData()
+        {
+            var json = JsonSerializer.Serialize(presents, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            File.WriteAllText(saveFile, json);
+        }
+
+        private void LoadData()
+        {
+            if (File.Exists(saveFile))
+            {
+                string json = File.ReadAllText(saveFile);
+
+                var list = JsonSerializer.Deserialize<List<Present>>(json);
+
+                if (list != null)
+                    presents = new BindingList<Present>(list);
+            }
+        }
+
         private void UpdateSummary()
         {
-            lblCount.Text =""+ presents.Count;
-            decimal total = 0;
+            lblCount.Text = "" + presents.Count;
 
+            decimal total = 0;
             foreach (var p in presents)
                 total += p.Price;
 
@@ -59,4 +87,3 @@ namespace Kolokwium1
         }
     }
 }
-

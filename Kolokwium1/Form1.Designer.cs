@@ -28,16 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             txtName = new TextBox();
             txtGift = new TextBox();
             txtPrice = new TextBox();
             btnAdd = new Button();
             dataGridView1 = new DataGridView();
+            presentBindingSource = new BindingSource(components);
             lblCount = new Label();
             lblTotal = new Label();
             label1 = new Label();
             label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)presentBindingSource).BeginInit();
             SuspendLayout();
             // 
             // txtName
@@ -82,6 +85,10 @@
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.Size = new Size(240, 150);
             dataGridView1.TabIndex = 4;
+            // 
+            // presentBindingSource
+            // 
+            presentBindingSource.DataSource = typeof(Present);
             // 
             // lblCount
             // 
@@ -136,6 +143,7 @@
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)presentBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -151,5 +159,6 @@
         private Label lblTotal;
         private Label label1;
         private Label label2;
+        private BindingSource presentBindingSource;
     }
 }
